@@ -209,7 +209,7 @@ template.innerHTML = /* html */`
 </svg>
 `;
 
-const ARIA_NAMES = { ' ': 'space', ':': 'colon', '-': 'hyphen', '_': 'underscore', '.': 'period', '!': 'exclamation mark', '?': 'question mark', '@': 'at', '#': 'hash', '+': 'plus', '/': 'slash', '*': 'asterisk', '(': 'open paren', ')': 'close paren' };
+const ARIA_NAMES = { ' ': 'space', '!': 'exclamation mark', '"': 'double quote', '#': 'hash', '$': 'dollar', '%': 'percent', '&': 'ampersand', '\'': 'apostrophe', '(': 'open paren', ')': 'close paren', '*': 'asterisk', '+': 'plus', ',': 'comma', '-': 'hyphen', '.': 'period', '/': 'slash', ':': 'colon', ';': 'semicolon', '<': 'less than', '=': 'equals', '>': 'greater than', '?': 'question mark', '@': 'at', '[': 'open bracket', '\\': 'backslash', ']': 'close bracket', '^': 'caret', '_': 'underscore', '`': 'backtick', '{': 'open brace', '|': 'pipe', '}': 'close brace', '~': 'tilde' };
 
 class BpmGlyph extends HTMLElement {
   static get observedAttributes() { return ['char', 'segments']; }
@@ -252,4 +252,6 @@ class BpmGlyph extends HTMLElement {
   }
 }
 
-customElements.define('bpm-glyph', BpmGlyph);
+if (!customElements.get('bpm-glyph')) {
+  customElements.define('bpm-glyph', BpmGlyph);
+}

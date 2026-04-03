@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(node -e \"const fs=require\\('fs'\\);const s=fs.readFileSync\\('dist/bpm-glyph.min.js','utf8'\\);const m=s.match\\(/innerHTML\\\\s*=\\\\s*\\\\x60\\([^\\\\x60]+\\)\\\\x60/\\);if\\(m\\)console.log\\(m[1].slice\\(0,300\\)\\);else console.log\\('template not found inline \\(likely fully minified by terser\\)'\\)\")"
+    ]
+  }
+}

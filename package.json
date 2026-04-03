@@ -4,8 +4,20 @@
   "description": "A 16-segment VFD-style web component for alphanumeric display glyphs",
   "main": "bpm-glyph.js",
   "scripts": {
-    "start": "npx serve ."
+    "start": "npx serve .",
+    "build": "rollup -c"
   },
-  "keywords": ["web-component", "16-segment", "vfd", "display", "glyph"],
-  "private": true
+  "keywords": [
+    "web-component",
+    "16-segment",
+    "vfd",
+    "display",
+    "glyph"
+  ],
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "rollup": "^2.80.0",
+    "@rollup/plugin-terser": "^1.0.0"
+  }
 }

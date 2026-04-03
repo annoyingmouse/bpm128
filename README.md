@@ -23,6 +23,16 @@ The closest real-world equivalent is the display style used on vintage Casio key
 
 ## Usage
 
+**Bundled (no module system required):**
+
+```html
+<script src="dist/bpm-glyph.min.js"></script>
+
+<bpm-glyph char="A"></bpm-glyph>
+```
+
+**ES module (direct):**
+
 ```html
 <script type="module" src="bpm-glyph.js"></script>
 
@@ -75,6 +85,15 @@ Pass a `segments` attribute with a comma-separated list of segment labels to dri
 
 The 16 labels are: `a1 a2 b c d1 d2 e f g1 g2 h i j k l m`
 
+## Building
+
+```sh
+npm install
+npm run build
+```
+
+Produces `dist/bpm-glyph.min.js` — a self-contained IIFE bundle with the SVG and CSS inlined and minified, built with Rollup and terser.
+
 ## TODO
 
 ### Component
@@ -83,7 +102,6 @@ The 16 labels are: `a1 a2 b c d1 d2 e f g1 g2 h i j k l m`
 - [ ] `--bpm-off-opacity` custom property so consumers can tune unlit segment visibility
 
 ### Tooling
-- [ ] Bundle step (esbuild) producing a single-file `bpm-glyph.min.js` for use without a module system
 - [ ] `size` script in `package.json` reporting the gzipped component size
 
 ### Deployment
