@@ -1,0 +1,192 @@
+// Maps standard 16-segment labels → SVG element IDs from bpm.svg
+const SEG = {
+  a1: 'diag-top-left',     // top bar, left half
+  a2: 'diag-top-right',    // top bar, right half
+  b:  'col-right-upper',   // upper-right vertical
+  c:  'col-right-lower',   // lower-right vertical
+  d1: 'diag-bottom-left',  // bottom bar, left half
+  d2: 'diag-bottom-right', // bottom bar, right half
+  e:  'col-left-lower',    // lower-left vertical
+  f:  'col-left-upper',    // upper-left vertical
+  g1: 'bar-middle-left',   // middle bar, left half
+  g2: 'bar-middle-right',  // middle bar, right half
+  h:  'brace-upper-left',  // upper-left diagonal (\, upper half, left→center)
+  i:  'col-center-upper',  // upper-center vertical
+  j:  'brace-upper-right', // upper-right diagonal (/, upper half, right→center)
+  k:  'brace-lower-left',  // lower-left diagonal (/, lower half, left→center)
+  l:  'col-center-lower',  // lower-center vertical
+  m:  'brace-lower-right', // lower-right diagonal (\, lower half, center→right)
+};
+
+// h+m together form a \ diagonal across the full display
+// j+k together form a / diagonal across the full display
+
+const GLYPHS = {
+  'A': ['a1','a2','b','c','e','f','g1','g2'],
+  'B': ['a1','a2','b','c','d1','d2','g2','i', 'l'],
+  'C': ['a1','a2','d1','d2','e','f'],
+  'D': ['a1','a2','b','c','d1','d2','i','l'],
+  'E': ['a1','a2','d1','d2','e','f','g1','g2'],
+  'F': ['a1','a2','e','f','g1'],
+  'G': ['a1','a2','c','d1','d2','e','f','g2'],
+  'H': ['b','c','e','f','g1','g2'],
+  'I': ['a1','a2','d1','d2','i','l'],
+  'J': ['b','c','d1','d2','e'],
+  'K': ['e','f','g1','j','m'],
+  'L': ['d1','d2','e','f'],
+  'M': ['b','c','e','f','h','j'],
+  'N': ['b','c','e','f','h','m'],
+  'O': ['a1','a2','b','c','d1','d2','e','f'],
+  'P': ['a1','a2','b','e','f','g1','g2'],
+  'Q': ['a1','a2','b','c','d1','d2','e','f','m'],
+  'R': ['a1','a2','b','e','f','g1','g2','m'],
+  'S': ['a1','a2','c','d1','d2','f','g1','g2'],
+  'T': ['a1','a2','i','l'],
+  'U': ['b','c','d1','d2','e','f'],
+  'V': ['e','f','k','j'],
+  'W': ['b','c','e','f','l','d1','d2'],
+  'X': ['h','j','k','m'],
+  'Y': ['l', 'g1', 'g2', 'b', 'f'],
+  'Z': ['a1','a2','j','k','d1','d2'],
+  '0': ['a1','a2','b','c','d1','d2','e','f','j','k'],
+  '1': ['b','c', 'j'],
+  '2': ['a1','a2','b','d1','d2','e','g1','g2'],
+  '3': ['a1','a2','b','c','d1','d2','g2'],
+  '4': ['b','c','f','g1','g2'],
+  '5': ['a1','a2','c','d1','d2','f','g1','g2'],
+  '6': ['a1','a2','c','d1','d2','e','f','g1','g2'],
+  '7': ['a1','a2','j','l'],
+  '8': ['a1','a2','b','c','d1','d2','e','f','g1','g2'],
+  '9': ['a1','a2','b','c','d1','d2','f','g1','g2'],
+  ':': ['i','l'],
+  '-': ['g1','g2'],
+  '_': ['d1','d2'],
+  '.': ['d2'],
+  ' ': [],
+};
+
+const template = document.createElement('template');
+template.innerHTML = /* html */`
+<style>
+  :host {
+    display: inline-block;
+    width: 1.5em;
+    aspect-ratio: 4 / 3;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .seg {
+    opacity: 1;
+    transition: opacity 0.05s;
+  }
+  .seg.off {
+    opacity: 0.08;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .seg { transition: none; }
+  }
+  @media (forced-colors: active) {
+    :host { forced-color-adjust: none; }
+  }
+</style>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="18.520834 70.781242 148.16667 111.12501"
+     aria-hidden="true"
+     focusable="false">
+  <g>
+    <rect id="bg"
+          style="fill:var(--bpm-background,#00000c)"
+          x="18.520834" y="70.781242"
+          width="148.16667" height="111.12501"/>
+    <path class="seg" id="col-center-upper"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 99.218753,91.947908 v 26.458342 l -6.614584,6.61458 -6.614583,-6.61458 -10e-7,-26.458343 6.614584,-6.614583 z"/>
+    <path class="seg" id="col-center-lower"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 99.218753,134.28125 v 26.45833 l -6.614584,6.61458 -6.614583,-6.61458 v -26.45833 l 6.614583,-6.61459 z"/>
+    <path class="seg" id="bar-middle-left"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 83.343752,132.95833 -42.333333,0 -6.614585,-6.61458 6.614585,-6.61459 42.333333,0 6.614584,6.61459 z"/>
+    <path class="seg" id="diag-top-left"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 83.343752,90.624995 -42.333334,0 -13.229167,-13.229167 55.562501,0 6.614584,6.614583 z"/>
+    <path class="seg" id="diag-bottom-left"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 83.343752,175.29166 -55.562501,0 13.22916,-13.22917 42.333341,1e-5 6.614584,6.61458 z"/>
+    <path class="seg" id="col-left-upper"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 38.364584,91.947912 v 26.458328 l -6.614583,6.61459 -6.614587,-6.61459 3e-6,-39.687495 z"/>
+    <path class="seg" id="col-left-lower"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 38.364584,134.28125 v 26.45833 l -13.229167,13.22917 -3e-6,-39.6875 6.614587,-6.61459 z"/>
+    <path class="seg" id="brace-lower-left"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 41.010411,159.41665 1e-6,-9.26042 30.42709,-14.55207 h 11.90625 v 9.26042 l -30.427087,14.55207 z"/>
+    <path class="seg" id="brace-upper-left"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 41.01041,93.27083 10e-7,9.26042 30.427091,14.55208 h 11.90625 v -9.26042 L 52.916665,93.27083 Z"/>
+    <path class="seg" id="bar-middle-right"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 101.86459,132.95833 h 42.33333 l 6.61459,-6.61458 -6.61459,-6.61459 h -42.33333 l -6.614588,6.61459 z"/>
+    <path class="seg" id="diag-top-right"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 101.86459,90.624998 h 42.33333 l 13.22917,-13.22917 h -55.5625 l -6.614588,6.61458 z"/>
+    <path class="seg" id="diag-bottom-right"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 101.86459,175.29166 h 55.5625 l -13.22916,-13.22917 -42.33334,1e-5 -6.614588,6.61458 z"/>
+    <path class="seg" id="col-right-upper"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 146.84376,91.947908 v 26.458332 l 6.61458,6.61459 6.61459,-6.61459 -1e-5,-39.687492 z"/>
+    <path class="seg" id="col-right-lower"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 146.84376,134.28125 v 26.45833 l 13.22916,13.22917 1e-5,-39.6875 -6.61459,-6.61459 z"/>
+    <path class="seg" id="brace-lower-right"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 144.19793,159.41665 v -9.26042 l -30.42709,-14.55207 h -11.90625 v 9.26042 l 30.42708,14.55207 z"/>
+    <path class="seg" id="brace-upper-right"
+          style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
+          d="m 144.19793,93.270828 v 9.260422 l -30.42709,14.55208 h -11.90625 v -9.26042 l 30.42708,-14.552082 z"/>
+  </g>
+</svg>
+`;
+
+const ARIA_NAMES = { ' ': 'space', ':': 'colon', '-': 'hyphen', '_': 'underscore', '.': 'period' };
+
+class BpmGlyph extends HTMLElement {
+  static get observedAttributes() { return ['char']; }
+
+  connectedCallback() {
+    if (!this.hasAttribute('role')) this.setAttribute('role', 'img');
+    this._render();
+  }
+
+  attributeChangedCallback() {
+    this._render();
+  }
+
+  _render() {
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: 'open' });
+    }
+
+    const root = this.shadowRoot;
+    root.innerHTML = '';
+    root.appendChild(template.content.cloneNode(true));
+
+    const char = (this.getAttribute('char') || ' ').toUpperCase();
+    const on = new Set((GLYPHS[char] ?? []).map(s => SEG[s]));
+
+    if (!this.hasAttribute('aria-label')) {
+      this.setAttribute('aria-label', ARIA_NAMES[char] ?? char);
+    }
+
+    root.querySelectorAll('.seg').forEach(el => {
+      el.classList.toggle('off', !on.has(el.id));
+    });
+  }
+}
+
+customElements.define('bpm-glyph', BpmGlyph);

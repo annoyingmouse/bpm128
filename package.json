@@ -1,0 +1,11 @@
+{
+  "name": "bpm",
+  "version": "1.0.0",
+  "description": "A 16-segment VFD-style web component for alphanumeric display glyphs",
+  "main": "bpm-glyph.js",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["web-component", "16-segment", "vfd", "display", "glyph"],
+  "private": true
+}
