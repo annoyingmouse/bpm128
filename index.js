@@ -39,7 +39,7 @@ textInput.addEventListener('input', () => {
 });
 
 // Segment editor
-const ALL_SEGS = ['a1','a2','f','b','e','c','d1','d2','g1','g2','h','i','j','k','l','m'];
+const ALL_SEGS = ['a1','a2','f','b','e','c','d1','d2','g1','g2','h','i','j','k','l','m','dp'];
 const editorGlyph = document.getElementById('editor-glyph');
 const editorControls = document.getElementById('editor-controls');
 const editorOutput = document.getElementById('editor-output');

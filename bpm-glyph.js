@@ -16,6 +16,7 @@ const SEG = {
   k:  'brace-lower-left',  // lower-left diagonal (/, lower half, left→center)
   l:  'col-center-lower',  // lower-center vertical
   m:  'brace-lower-right', // lower-right diagonal (\, lower half, center→right)
+  dp: 'dot-decimal',       // decimal point — bottom-right corner dot
 };
 
 // h+m together form a \ diagonal across the full display
@@ -96,13 +97,13 @@ export const GLYPHS = {
   '$': ['a1','a2','d1','d2','g1','g2','c','f','i','l'],
   '%': ['a1','f','d2','g2','c','g1','i','l','j','k'],
   '&': ['a1','d1','g1','f','e','h','j','m','d2'],
-  '!': ['i','d1','d2'],
+  '!': ['c','b','dp'],
   '#': ['f','e','d1','d2','g1','g2','i','l'],
   '+': ['g1','g2','i','l'],
   '=': ['d1','d2','g1','g2'],
   '/': ['j','k'],
   '*': ['h','i','j','k','l','m','g1','g2'],
-  '?': ['b','a2','l','g2'],
+  '?': ['b','a2','l','g2','dp'],
   '@': ['a1','a2','g1','d1','d2','c','b','e','l'],
   '(': ['m','j'],
   ')': ['h','k'],
@@ -117,8 +118,9 @@ export const GLYPHS = {
   ';': ['a1','k'],
   '-': ['g1','g2'],
   '_': ['d1','d2'],
-  '.': ['d2'],
+  '.': ['dp'],
   ' ': [],
+  '\x7F': ['a1','a2','b','c','d1','d2','e','f','g1','g2','h','i','j','k','l','m','dp'],
 };
 
 const template = document.createElement('template');
@@ -192,24 +194,27 @@ template.innerHTML = /* html */`
           d="m 101.86459,90.624998 h 42.33333 l 13.22917,-13.22917 h -55.5625 l -6.614588,6.61458 z"/>
     <path class="seg" id="diag-bottom-right"
           style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
-          d="m 101.86459,175.29166 h 55.5625 l -13.22916,-13.22917 -42.33334,1e-5 -6.614588,6.61458 z"/>
+          d="M152.28983,175.29124l-50.425,0l-6.615,-6.614l6.615,-6.615l42.333,0l7.785,7.785c-0.356,0.74 -0.556,1.569 -0.556,2.444c0,1.102 0.317,2.131 0.863,3Z"/>
     <path class="seg" id="col-right-upper"
           style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
           d="m 146.84376,91.947908 v 26.458332 l 6.61458,6.61459 6.61459,-6.61459 -1e-5,-39.687492 z"/>
     <path class="seg" id="col-right-lower"
           style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
-          d="m 146.84376,134.28125 v 26.45833 l 13.22916,13.22917 1e-5,-39.6875 -6.61459,-6.61459 z"/>
+          d="M153.79783,167.69324l-6.954,-6.954l-0,-26.458l6.615,-6.615l6.614,6.615l0,33.228c-0.869,-0.547 -1.898,-0.863 -3,-0.863c-1.221,-0 -2.351,0.388 -3.275,1.047Z"/>
     <path class="seg" id="brace-lower-right"
           style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
           d="m 144.19793,159.41665 v -9.26042 l -30.42709,-14.55207 h -11.90625 v 9.26042 l 30.42708,14.55207 z"/>
     <path class="seg" id="brace-upper-right"
           style="fill:var(--bpm-fill,#76d0c6);stroke:var(--bpm-stroke,#97e4f8);stroke-width:0.79375"
           d="m 144.19793,93.270828 v 9.260422 l -30.42709,14.55208 h -11.90625 v -9.26042 l 30.42708,-14.552082 z"/>
+    <circle class="seg" id="dot-decimal"
+            style="fill:var(--bpm-fill,#76d0c6)"
+            cx="157.38021" cy="172.59375" r="3.0"/>
   </g>
 </svg>
 `;
 
-const ARIA_NAMES = { ' ': 'space', '!': 'exclamation mark', '"': 'double quote', '#': 'hash', '$': 'dollar', '%': 'percent', '&': 'ampersand', '\'': 'apostrophe', '(': 'open paren', ')': 'close paren', '*': 'asterisk', '+': 'plus', ',': 'comma', '-': 'hyphen', '.': 'period', '/': 'slash', ':': 'colon', ';': 'semicolon', '<': 'less than', '=': 'equals', '>': 'greater than', '?': 'question mark', '@': 'at', '[': 'open bracket', '\\': 'backslash', ']': 'close bracket', '^': 'caret', '_': 'underscore', '`': 'backtick', '{': 'open brace', '|': 'pipe', '}': 'close brace', '~': 'tilde' };
+const ARIA_NAMES = { ' ': 'space', '!': 'exclamation mark', '"': 'double quote', '#': 'hash', '$': 'dollar', '%': 'percent', '&': 'ampersand', '\'': 'apostrophe', '(': 'open paren', ')': 'close paren', '*': 'asterisk', '+': 'plus', ',': 'comma', '-': 'hyphen', '.': 'period', '/': 'slash', ':': 'colon', ';': 'semicolon', '<': 'less than', '=': 'equals', '>': 'greater than', '?': 'question mark', '@': 'at', '[': 'open bracket', '\\': 'backslash', ']': 'close bracket', '^': 'caret', '_': 'underscore', '`': 'backtick', '{': 'open brace', '|': 'pipe', '}': 'close brace', '~': 'tilde', '\x7F': 'delete' };
 
 class BpmGlyph extends HTMLElement {
   static get observedAttributes() { return ['char', 'segments']; }
