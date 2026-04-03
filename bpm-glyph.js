@@ -21,7 +21,7 @@ const SEG = {
 // h+m together form a \ diagonal across the full display
 // j+k together form a / diagonal across the full display
 
-const GLYPHS = {
+export const GLYPHS = {
   'A': ['a1','a2','b','c','e','f','g1','g2'],
   'B': ['a1','a2','b','c','d1','d2','g2','i', 'l'],
   'C': ['a1','a2','d1','d2','e','f'],
@@ -58,7 +58,63 @@ const GLYPHS = {
   '7': ['a1','a2','j','l'],
   '8': ['a1','a2','b','c','d1','d2','e','f','g1','g2'],
   '9': ['a1','a2','b','c','d1','d2','f','g1','g2'],
-  ':': ['i','l'],
+  // Lowercase — occupy the lower half of the cell where distinct from uppercase
+  'a': ['e','d1','d2','g1','l'],
+  'b': ['f','e','g1','g2','c','d1','d2'],
+  'c': ['g1','g2','e','d1','d2'],
+  'd': ['b','c','d1','d2','g1','g2','e'],
+  'e': ['d1','d2','e','g1','k'],
+  'f': ['a2','l','i','g1','g2'],
+  'g': ['d2','k','m','g1','e'],
+  'h': ['f','e','g1','g2','c'],
+  'i': ['a1','d1','g1','d2','l'],
+  'j': ['d2','d1','c','g2','a2'],
+  'k': ['f','e','g1','g2','m'],
+  'l': ['i','l','a1','d2'],
+  'm': ['g1','g2','e','l','c'],
+  'n': ['g1','g2','e','c'],
+  'o': ['g1','g2','e','c','d1','d2'],
+  'p': ['c','g2','m','l','d1'],
+  'q': ['d1','d2','g1','g2','e','c','m'],
+  'r': ['g1','g2','e'],
+  's': ['d1','d2','g2','m'],
+  't': ['d2','g1','g2','i','l'],
+  'u': ['e','c','d1','d2'],
+  'v': ['e','k'],
+  'w': ['e','c','k','m'],
+  'x': ['g1','g2','k','m'],
+  'y': ['c','d2','d1','m'],
+  'z': ['d1','g1','k'],
+  // Symbols
+  '"': ['f','b'],
+  ',': ['d1'],
+  '\'': ['b'],
+  '\\': ['h','m'],
+  '|': ['i','l'],
+  '<': ['m','j'],
+  '>': ['h','k'],
+  '$': ['a1','a2','d1','d2','g1','g2','c','f','i','l'],
+  '%': ['a1','f','d2','g2','c','g1','i','l','j','k'],
+  '&': ['a1','d1','g1','f','e','h','j','m','d2'],
+  '!': ['i','d1','d2'],
+  '#': ['f','e','d1','d2','g1','g2','i','l'],
+  '+': ['g1','g2','i','l'],
+  '=': ['d1','d2','g1','g2'],
+  '/': ['j','k'],
+  '*': ['h','i','j','k','l','m','g1','g2'],
+  '?': ['b','a2','l','g2'],
+  '@': ['a1','a2','g1','d1','d2','c','b','e','l'],
+  '(': ['m','j'],
+  ')': ['h','k'],
+  '[': ['l','i','a2','d2'],
+  ']': ['i','l','a1','d1'],
+  '{': ['i','l','a2','d2','g1'],
+  '}': ['i','l','a1','d1','g2'],
+  '^': ['m','k'],
+  '`': ['h'],
+  '~': ['f','j','h'],
+  ':': ['g1','d1'],
+  ';': ['a1','k'],
   '-': ['g1','g2'],
   '_': ['d1','d2'],
   '.': ['d2'],
@@ -153,10 +209,10 @@ template.innerHTML = /* html */`
 </svg>
 `;
 
-const ARIA_NAMES = { ' ': 'space', ':': 'colon', '-': 'hyphen', '_': 'underscore', '.': 'period' };
+const ARIA_NAMES = { ' ': 'space', ':': 'colon', '-': 'hyphen', '_': 'underscore', '.': 'period', '!': 'exclamation mark', '?': 'question mark', '@': 'at', '#': 'hash', '+': 'plus', '/': 'slash', '*': 'asterisk', '(': 'open paren', ')': 'close paren' };
 
 class BpmGlyph extends HTMLElement {
-  static get observedAttributes() { return ['char']; }
+  static get observedAttributes() { return ['char', 'segments']; }
 
   connectedCallback() {
     if (!this.hasAttribute('role')) this.setAttribute('role', 'img');
@@ -176,8 +232,15 @@ class BpmGlyph extends HTMLElement {
     root.innerHTML = '';
     root.appendChild(template.content.cloneNode(true));
 
-    const char = (this.getAttribute('char') || ' ').toUpperCase();
-    const on = new Set((GLYPHS[char] ?? []).map(s => SEG[s]));
+    const segAttr = this.getAttribute('segments');
+    const char = this.getAttribute('char') || ' ';
+
+    let on;
+    if (segAttr !== null) {
+      on = new Set(segAttr.split(',').map(s => SEG[s.trim()] ?? s.trim()).filter(Boolean));
+    } else {
+      on = new Set((GLYPHS[char] ?? GLYPHS[char.toUpperCase()] ?? []).map(s => SEG[s]));
+    }
 
     if (!this.hasAttribute('aria-label')) {
       this.setAttribute('aria-label', ARIA_NAMES[char] ?? char);

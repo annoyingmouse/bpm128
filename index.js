@@ -1,20 +1,66 @@
+import { GLYPHS } from './bpm-glyph.js';
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function glyphs(str, container) {
-  for (const ch of str) {
+function glyphs(chars, container) {
+  for (const ch of chars) {
     const el = document.createElement('bpm-glyph');
     el.setAttribute('char', ch);
     container.appendChild(el);
   }
 }
 
-glyphs('ABCDEFGHIJKLMNOPQRSTUVWXYZ', document.getElementById('letters'));
-glyphs('0123456789', document.getElementById('digits'));
-glyphs(':-._ ', document.getElementById('punctuation'));
+const upper = Object.keys(GLYPHS).filter(c => /^[A-Z]$/.test(c)).sort();
+const lower = Object.keys(GLYPHS).filter(c => /^[a-z]$/.test(c)).sort();
+const digits = Object.keys(GLYPHS).filter(c => /^[0-9]$/.test(c)).sort();
+const punct  = Object.keys(GLYPHS).filter(c => !/^[A-Za-z0-9 ]$/.test(c)).sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0));
+
+glyphs(upper, document.getElementById('letters'));
+glyphs(lower, document.getElementById('letters-lower'));
+glyphs(digits, document.getElementById('digits'));
+glyphs(punct,  document.getElementById('punctuation'));
 
 const colourSample = 'BPM8';
 ['default', 'amber', 'green', 'red', 'white'].forEach(name => {
   glyphs(colourSample, document.getElementById(`col-${name}`));
+});
+
+// Interactive text input
+const textInput = document.getElementById('text-input');
+const textDisplay = document.getElementById('text-display');
+
+textInput.addEventListener('input', () => {
+  textDisplay.innerHTML = '';
+  for (const ch of textInput.value) {
+    const el = document.createElement('bpm-glyph');
+    el.setAttribute('char', ch);
+    textDisplay.appendChild(el);
+  }
+});
+
+// Segment editor
+const ALL_SEGS = ['a1','a2','f','b','e','c','d1','d2','g1','g2','h','i','j','k','l','m'];
+const editorGlyph = document.getElementById('editor-glyph');
+const editorControls = document.getElementById('editor-controls');
+const editorOutput = document.getElementById('editor-output');
+const activeSegs = new Set();
+
+function updateEditor() {
+  editorGlyph.setAttribute('segments', [...activeSegs].join(','));
+  editorOutput.textContent = activeSegs.size
+    ? `['${[...activeSegs].join("','")}']`
+    : '[]';
+}
+
+ALL_SEGS.forEach(seg => {
+  const btn = document.createElement('button');
+  btn.textContent = seg;
+  btn.addEventListener('click', () => {
+    activeSegs.has(seg) ? activeSegs.delete(seg) : activeSegs.add(seg);
+    btn.classList.toggle('on', activeSegs.has(seg));
+    updateEditor();
+  });
+  editorControls.appendChild(btn);
 });
 
 // Scrolling demo — rotates left one character per second (paused if reduced motion)

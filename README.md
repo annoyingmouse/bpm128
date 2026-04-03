@@ -48,3 +48,44 @@ You can override the label:
 ```html
 <bpm-glyph char=":" aria-label="separator"></bpm-glyph>
 ```
+
+## Colour customisation
+
+Three CSS custom properties control the display appearance:
+
+| Property | Default | Controls |
+|---|---|---|
+| `--bpm-fill` | `#76d0c6` | segment face colour |
+| `--bpm-stroke` | `#97e4f8` | segment edge colour |
+| `--bpm-background` | `#00000c` | cell background |
+
+Set them on any ancestor or directly on the element:
+
+```css
+.amber { --bpm-fill: #ffb300; --bpm-stroke: #ffe082; --bpm-background: #110900; }
+```
+
+## Raw segment access
+
+Pass a `segments` attribute with a comma-separated list of segment labels to drive the display directly, bypassing the character map. Useful for custom glyphs or animations:
+
+```html
+<bpm-glyph segments="a1,a2,g1,g2,d1,d2"></bpm-glyph>
+```
+
+The 16 labels are: `a1 a2 b c d1 d2 e f g1 g2 h i j k l m`
+
+## TODO
+
+### Component
+- [ ] `<bpm-display text="BPM 128">` wrapper element that handles the string → glyph split
+- [ ] `brightness` attribute (0–1) to control lit segment opacity
+- [ ] `--bpm-off-opacity` custom property so consumers can tune unlit segment visibility
+
+### Tooling
+- [ ] Bundle step (esbuild) producing a single-file `bpm-glyph.min.js` for use without a module system
+- [ ] `size` script in `package.json` reporting the gzipped component size
+
+### Deployment
+- [ ] Static demo on GitHub Pages
+- [ ] Update README with `<bpm-display>` usage once implemented
